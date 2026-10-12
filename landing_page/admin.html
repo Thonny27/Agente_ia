@@ -540,6 +540,69 @@
                     }
                 }
 
+                // CÁLCULO DINÁMICO DE ENCUESTAS (Q1 a Q5)
+                const surveyQuestions = [
+                    "1. Rapidez en atención y entrega",
+                    "2. Sabor, frescura y presentación",
+                    "3. Amabilidad y cortesía del equipo",
+                    "4. Precios y promociones justas",
+                    "5. Recomendación a amigos y familiares"
+                ];
+
+                const totalsQ = [0, 0, 0, 0, 0];
+                let surveyCount = 0;
+
+                data.forEach(row => {
+                    if (row['Encuesta_Q1'] || row['Satisfacción Servicio']) {
+                        const val1 = parseInt(row['Encuesta_Q1']) || 5;
+                        const val2 = parseInt(row['Encuesta_Q2']) || 5;
+                        const val3 = parseInt(row['Encuesta_Q3']) || 5;
+                        const val4 = parseInt(row['Encuesta_Q4']) || 5;
+                        const val5 = parseInt(row['Encuesta_Q5']) || 5;
+
+                        totalsQ[0] += val1;
+                        totalsQ[1] += val2;
+                        totalsQ[2] += val3;
+                        totalsQ[3] += val4;
+                        totalsQ[4] += val5;
+                        surveyCount++;
+                    }
+                });
+
+                const surveyBox = document.getElementById('survey-results-box');
+                const kpiSatisfaccion = document.getElementById('kpi-satisfaccion-general');
+
+                if (surveyCount > 0 && surveyBox) {
+                    surveyBox.innerHTML = '';
+                    let sumAllPercentages = 0;
+
+                    surveyQuestions.forEach((pregunta, idx) => {
+                        const avg = totalsQ[idx] / surveyCount; // promedio de 1 a 5
+                        const percent = Math.round((avg / 5) * 100);
+                        sumAllPercentages += percent;
+
+                        const itemDiv = document.createElement('div');
+                        itemDiv.innerHTML = `
+                            <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px;">
+                                <span>${pregunta}</span>
+                                <span style="color: var(--gold); font-weight: 600;">${percent}% Satisfechos (${avg.toFixed(1)}/5)</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: ${percent}%;"></div>
+                            </div>
+                        `;
+                        surveyBox.appendChild(itemDiv);
+                    });
+
+                    const overallAvgPercent = Math.round(sumAllPercentages / 5);
+                    if (kpiSatisfaccion) {
+                        kpiSatisfaccion.textContent = `${overallAvgPercent}% ⭐`;
+                    }
+                } else if (surveyBox) {
+                    surveyBox.innerHTML = '<p style="color: #888; text-align: center; margin: 20px 0;">Aún no hay respuestas de encuestas registradas.</p>';
+                    if (kpiSatisfaccion) kpiSatisfaccion.textContent = '-';
+                }
+
             } catch (error) {
                 console.error("Error cargando datos:", error);
                 document.getElementById('table-body').innerHTML = '<tr><td colspan="9" style="text-align: center; color: red;">Error al cargar los datos</td></tr>';

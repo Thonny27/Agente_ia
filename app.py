@@ -215,6 +215,11 @@ def submit():
         num_compra = compras_previas + 1
 
         estado_satisfaccion = request.form.get('estado_satisfaccion', 'Excelente (100%)')
+        q1 = request.form.get('encuesta_q1', '5')
+        q2 = request.form.get('encuesta_q2', '5')
+        q3 = request.form.get('encuesta_q3', '5')
+        q4 = request.form.get('encuesta_q4', '5')
+        q5 = request.form.get('encuesta_q5', '5')
 
         nuevo_registro = pd.DataFrame([{
             "Nombres": nombres,
@@ -232,7 +237,12 @@ def submit():
             "Items comprados": items,
             "Total compra": total,
             "Total IGV": igv,
-            "Satisfacción Servicio": estado_satisfaccion
+            "Satisfacción Servicio": estado_satisfaccion,
+            "Encuesta_Q1": q1,
+            "Encuesta_Q2": q2,
+            "Encuesta_Q3": q3,
+            "Encuesta_Q4": q4,
+            "Encuesta_Q5": q5
         }])
         
         df_boletas = pd.concat([df_boletas, nuevo_registro], ignore_index=True)
