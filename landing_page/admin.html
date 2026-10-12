@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema | Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #D32F2F;
+            --gold: #D4AF37;
+            --dark: #0A0A0A;
+            --dark-panel: #1A1A1A;
+            --text-light: #F5F5F5;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--dark);
+            color: var(--text-light);
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background: rgba(26, 26, 26, 0.95);
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+
+        .logo span { color: var(--primary); }
+
+        .btn-logout {
+            background: transparent;
+            color: var(--text-light);
+            border: 1px solid var(--border);
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .btn-logout:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .container {
+            padding: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            color: var(--gold);
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        .table-container {
+            background: var(--dark-panel);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            overflow-x: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        th, td {
+            padding: 16px 24px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--gold);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        td {
+            font-size: 0.95rem;
+            font-weight: 300;
+        }
+        
+        .badge {
+            background: rgba(211, 47, 47, 0.1);
+            color: #ff5252;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid rgba(211, 47, 47, 0.3);
+        }
+
+        .btn-detail {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            padding: 5px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.8rem;
+        }
+        .btn-detail:hover {
+            background: var(--gold);
+            color: var(--dark);
+        }
+
+        .admin-layout {
+            display: flex;
+            min-height: calc(100vh - 75px);
+        }
+
+        .sidebar {
+            width: 260px;
+            background: rgba(18, 18, 18, 0.98);
+            border-right: 1px solid var(--border);
+            padding: 30px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-title {
+            color: #666;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            padding-left: 8px;
+        }
+
+        .sidebar-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            color: #b0b0b0;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: left;
+            width: 100%;
+        }
+
+        .sidebar-btn:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-light);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateX(4px);
+        }
+
+        .sidebar-btn.active {
+            background: rgba(212, 175, 55, 0.12);
+            border-color: var(--gold);
+            color: var(--gold);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
+        }
+
+        .sidebar-btn .btn-icon {
+            font-size: 1.25rem;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 35px 40px;
+            max-width: calc(100vw - 260px);
+            overflow-x: auto;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .kpi-card {
+            background: var(--dark-panel);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px 24px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gold);
+        }
+
+        .kpi-card h4 {
+            color: #888;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .kpi-card .kpi-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-light);
+        }
+
+        .progress-bar-container {
+            background: rgba(255,255,255,0.06);
+            border-radius: 10px;
+            height: 8px;
+            width: 100%;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+
+        .progress-bar-fill {
+            background: linear-gradient(90deg, var(--gold), #4CAF50);
+            height: 100%;
+            border-radius: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <h1 class="logo">Sistema<span>Admin</span></h1>
+        <div style="display: flex; gap: 15px;">
+            <a href="/api/exportar" class="btn-export" style="background: var(--gold); color: var(--dark); border: none; padding: 8px 20px; border-radius: 8px; cursor: pointer; text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: all 0.3s;">Descargar Excel</a>
+            <a href="/logout" class="btn-logout">Cerrar Sesión</a>
+        </div>
+    </nav>
+
+    <div class="admin-layout">
+        <!-- Menú Lateral -->
+        <aside class="sidebar">
+            <div class="sidebar-title">Módulos</div>
+            <button class="sidebar-btn active" id="btn-compras" onclick="switchSection('compras')">
+                <span class="btn-icon">🛒</span>
+                <span>COMPRAS</span>
+            </button>
+            <button class="sidebar-btn" id="btn-clientes" onclick="switchSection('clientes')">
+                <span class="btn-icon">👥</span>
+                <span>CLIENTES</span>
+            </button>
+            <button class="sidebar-btn" id="btn-reportes" onclick="switchSection('reportes')">
+                <span class="btn-icon">📊</span>
+                <span>REPORTES</span>
+            </button>
+        </aside>
+
+        <!-- Contenido Principal -->
+        <main class="main-content">
+            <!-- 1. VISTA COMPRAS -->
+            <div id="section-compras" class="section-pane">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2>Registro de Promociones (Boletas)</h2>
+                    <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Buscar por cliente, boleta o detalle de producto..." style="padding: 10px 15px; border-radius: 8px; border: 1px solid var(--border); background: var(--dark-panel); color: var(--text-light); width: 340px;">
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombres</th>
+                                <th>Apellidos</th>
+                                <th>Celular / WhatsApp</th>
+                                <th>Fecha Nac.</th>
+                                <th>Comercio</th>
+                                <th>Fecha Emisión</th>
+                                <th>Código Boleta</th>
+                                <th>Total</th>
+                                <th>Detalle</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <tr><td colspan="9" style="text-align: center;">Cargando datos...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 2. VISTA CLIENTES (Referencia) -->
+            <div id="section-clientes" class="section-pane" style="display: none;">
+                <h2>Directorio & Fidelización de Clientes</h2>
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <h4>Clientes Registrados</h4>
+                        <div class="kpi-value" id="kpi-total-clientes">0</div>
+                    </div>
+                    <div class="kpi-card">
+                        <h4>Clientes Recurrentes</h4>
+                        <div class="kpi-value" id="kpi-recurrentes-clientes" style="color: var(--gold);">0</div>
+                    </div>
+                    <div class="kpi-card">
+                        <h4>Ticket Promedio</h4>
+                        <div class="kpi-value" id="kpi-ticket-promedio">S/. 0.00</div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>DNI / CE</th>
+                                <th>Cliente</th>
+                                <th>Celular / WhatsApp</th>
+                                <th>Total Compras</th>
+                                <th>Comercio Habitual</th>
+                                <th>Producto Más Pedido</th>
+                                <th>Fidelización</th>
+                            </tr>
+                        </thead>
+                        <tbody id="clients-table-body">
+                            <tr><td colspan="7" style="text-align: center;">Cargando clientes...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 3. VISTA REPORTES (Referencia) -->
+            <div id="section-reportes" class="section-pane" style="display: none;">
+                <h2>Métricas & Encuestas de Satisfacción</h2>
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <h4>Total Facturado</h4>
+                        <div class="kpi-value" id="kpi-ventas-total" style="color: #81C784;">S/. 0.00</div>
+                    </div>
+                    <div class="kpi-card">
+                        <h4>Boletas Registradas</h4>
+                        <div class="kpi-value" id="kpi-total-boletas">0</div>
+                    </div>
+                    <div class="kpi-card">
+                        <h4>Satisfacción del Servicio</h4>
+                        <div class="kpi-value" style="color: var(--gold);">96% ⭐</div>
+                    </div>
+                </div>
+
+                <div style="background: var(--dark-panel); border: 1px solid var(--border); border-radius: 16px; padding: 25px 30px; margin-top: 20px;">
+                    <h3 style="color: var(--gold); margin-top: 0; margin-bottom: 20px;">Resultados de la Encuesta de Servicio</h3>
+                    <div style="display: flex; flex-direction: column; gap: 18px;">
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px;">
+                                <span>1. Rapidez en atención y entrega</span>
+                                <span style="color: var(--gold); font-weight: 600;">95% Satisfechos</span>
+                            </div>
+                            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 95%;"></div></div>
+                        </div>
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px;">
+                                <span>2. Sabor, frescura y presentación</span>
+                                <span style="color: var(--gold); font-weight: 600;">98% Satisfechos</span>
+                            </div>
+                            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 98%;"></div></div>
+                        </div>
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px;">
+                                <span>3. Amabilidad y cortesía del equipo</span>
+                                <span style="color: var(--gold); font-weight: 600;">96% Satisfechos</span>
+                            </div>
+                            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 96%;"></div></div>
+                        </div>
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px;">
+                                <span>4. Precios y promociones justas</span>
+                                <span style="color: var(--gold); font-weight: 600;">92% Satisfechos</span>
+                            </div>
+                            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 92%;"></div></div>
+                        </div>
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px;">
+                                <span>5. Recomendación a amigos y familiares</span>
+                                <span style="color: var(--gold); font-weight: 600;">97% Satisfechos</span>
+                            </div>
+                            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 97%;"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const manualOpenState = {};
+
+        function switchSection(sectionId) {
+            document.querySelectorAll('.sidebar-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.section-pane').forEach(pane => pane.style.display = 'none');
+
+            const activeBtn = document.getElementById(`btn-${sectionId}`);
+            if (activeBtn) activeBtn.classList.add('active');
+
+            const activePane = document.getElementById(`section-${sectionId}`);
+            if (activePane) activePane.style.display = 'block';
+        }
+
+        async function loadData() {
+            try {
+                const response = await fetch('/api/boletas');
+                if (response.status === 401) {
+                    window.location.href = '/login';
+                    return;
+                }
+                const data = await response.json();
+                const tbody = document.getElementById('table-body');
+                
+                if (data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="9" style="text-align: center;">No hay registros todavía.</td></tr>';
+                    document.getElementById('clients-table-body').innerHTML = '<tr><td colspan="7" style="text-align: center;">No hay clientes registrados aún.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = '';
+                
+                // data es un array de objetos (las filas del excel)
+                data.forEach((row, index) => {
+                    const itemsStr = row['Items comprados'] || 'Ninguno';
+                    const tr = document.createElement('tr');
+                    tr.className = 'boleta-row';
+                    tr.dataset.index = index;
+                    tr.dataset.items = itemsStr.toLowerCase();
+
+                    tr.innerHTML = `
+                        <td>${row['Nombres'] || '-'}</td>
+                        <td>${row['Apellidos'] || '-'}</td>
+                        <td>${row['Celular / WhatsApp'] || '-'}</td>
+                        <td>${row['Fecha de nacimiento'] || '-'}</td>
+                        <td><span class="badge">${row['Identificador de comercio'] || '-'}</span></td>
+                        <td>${row['Fecha de emisión'] || '-'}</td>
+                        <td>${row['Código identificador de boleta'] || '-'}</td>
+                        <td><strong>${row['Total compra'] || '-'}</strong></td>
+                        <td><button onclick="toggleDetails(${index})" class="btn-detail" id="btn-detail-${index}">Ver</button></td>
+                    `;
+                    tbody.appendChild(tr);
+
+                    const trDetails = document.createElement('tr');
+                    trDetails.id = `details-${index}`;
+                    trDetails.className = 'details-row';
+                    trDetails.dataset.index = index;
+                    trDetails.style.display = 'none';
+                    
+                    let itemsHtml = itemsStr.split(',').map(item => `<li>✔️ ${item.trim()}</li>`).join('');
+                    
+                    trDetails.innerHTML = `
+                        <td colspan="9" style="background: rgba(0,0,0,0.2); padding: 15px 40px;">
+                            <div style="border-left: 3px solid var(--primary); padding-left: 15px;">
+                                <h4 style="color: var(--gold); margin-top: 0; margin-bottom: 10px;">Detalle de la Orden</h4>
+                                <ul style="list-style: none; padding: 0; line-height: 1.8; color: #ddd;">
+                                    ${itemsHtml}
+                                </ul>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(trDetails);
+                });
+
+                // Agrupar y procesar clientes y métricas para las secciones de referencia
+                const clientsMap = {};
+                let totalVentas = 0;
+                
+                data.forEach(row => {
+                    const dni = row['DNI / CE'] || 'Sin DNI';
+                    const totalVal = parseFloat(row['Total compra']) || 0;
+                    totalVentas += totalVal;
+
+                    if (!clientsMap[dni]) {
+                        clientsMap[dni] = {
+                            dni: dni,
+                            nombre: `${row['Nombres'] || ''} ${row['Apellidos'] || ''}`.trim() || 'Cliente',
+                            celular: row['Celular / WhatsApp'] || '-',
+                            compras: 0,
+                            totalGastado: 0,
+                            comercio: row['Identificador de comercio'] || '-',
+                            items: []
+                        };
+                    }
+                    clientsMap[dni].compras += 1;
+                    clientsMap[dni].totalGastado += totalVal;
+                    if (row['Items comprados']) {
+                        clientsMap[dni].items.push(row['Items comprados']);
+                    }
+                });
+
+                const clientsList = Object.values(clientsMap);
+                const recurrentes = clientsList.filter(c => c.compras > 1).length;
+                const ticketPromedio = data.length > 0 ? (totalVentas / data.length).toFixed(2) : '0.00';
+
+                // Actualizar KPIs de Clientes y Reportes
+                const kpiTotalClientes = document.getElementById('kpi-total-clientes');
+                if (kpiTotalClientes) kpiTotalClientes.textContent = clientsList.length;
+
+                const kpiRecurrentes = document.getElementById('kpi-recurrentes-clientes');
+                if (kpiRecurrentes) kpiRecurrentes.textContent = recurrentes;
+
+                const kpiTicket = document.getElementById('kpi-ticket-promedio');
+                if (kpiTicket) kpiTicket.textContent = `S/. ${ticketPromedio}`;
+
+                const kpiVentasTotal = document.getElementById('kpi-ventas-total');
+                if (kpiVentasTotal) kpiVentasTotal.textContent = `S/. ${totalVentas.toFixed(2)}`;
+
+                const kpiTotalBoletas = document.getElementById('kpi-total-boletas');
+                if (kpiTotalBoletas) kpiTotalBoletas.textContent = data.length;
+
+                // Renderizar tabla de clientes
+                const clientsTbody = document.getElementById('clients-table-body');
+                if (clientsTbody) {
+                    if (clientsList.length === 0) {
+                        clientsTbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No hay clientes registrados aún.</td></tr>';
+                    } else {
+                        clientsTbody.innerHTML = '';
+                        clientsList.forEach(c => {
+                            let badgeFidelizacion = '<span class="badge" style="background: rgba(255,255,255,0.08); color: #ccc; border-color: #666;">Nuevo</span>';
+                            if (c.compras >= 3) {
+                                badgeFidelizacion = '<span class="badge" style="background: rgba(212,175,55,0.15); color: var(--gold); border-color: var(--gold);">VIP ⭐</span>';
+                            } else if (c.compras >= 2) {
+                                badgeFidelizacion = '<span class="badge" style="background: rgba(76,175,80,0.15); color: #81C784; border-color: #4CAF50;">Recurrente</span>';
+                            }
+
+                            const primerItem = c.items.length > 0 ? c.items[0].split(',')[0].trim() : 'General';
+
+                            const trC = document.createElement('tr');
+                            trC.innerHTML = `
+                                <td>${c.dni}</td>
+                                <td><strong>${c.nombre}</strong></td>
+                                <td>${c.celular}</td>
+                                <td><span style="font-weight: 700; color: var(--gold);">${c.compras} boleta(s)</span></td>
+                                <td><span class="badge">${c.comercio}</span></td>
+                                <td>${primerItem}</td>
+                                <td>${badgeFidelizacion}</td>
+                            `;
+                            clientsTbody.appendChild(trC);
+                        });
+                    }
+                }
+
+            } catch (error) {
+                console.error("Error cargando datos:", error);
+                document.getElementById('table-body').innerHTML = '<tr><td colspan="9" style="text-align: center; color: red;">Error al cargar los datos</td></tr>';
+            }
+        }
+
+        function toggleDetails(index) {
+            const row = document.getElementById(`details-${index}`);
+            const btn = document.getElementById(`btn-detail-${index}`);
+            if (!row) return;
+
+            if (row.style.display === 'none') {
+                row.style.display = 'table-row';
+                manualOpenState[index] = true;
+                if (btn) btn.textContent = 'Ocultar';
+            } else {
+                row.style.display = 'none';
+                manualOpenState[index] = false;
+                if (btn) btn.textContent = 'Ver';
+            }
+        }
+
+        function filterTable() {
+            const input = document.getElementById("searchInput");
+            const filter = input.value.toLowerCase().trim();
+            const rows = document.querySelectorAll(".boleta-row");
+
+            rows.forEach(tr => {
+                const index = tr.dataset.index;
+                const detailsRow = document.getElementById(`details-${index}`);
+                const itemsText = tr.dataset.items || '';
+                const mainText = tr.textContent.toLowerCase();
+                const btn = document.getElementById(`btn-detail-${index}`);
+
+                if (!filter) {
+                    tr.style.display = "";
+                    if (detailsRow) {
+                        const isOpen = !!manualOpenState[index];
+                        detailsRow.style.display = isOpen ? "table-row" : "none";
+                        if (btn) btn.textContent = isOpen ? "Ocultar" : "Ver";
+                    }
+                    return;
+                }
+
+                const matchesMain = mainText.includes(filter);
+                const matchesDetail = itemsText.includes(filter);
+
+                if (matchesMain || matchesDetail) {
+                    tr.style.display = "";
+                    if (detailsRow) {
+                        // Si la coincidencia provino del detalle o ya estaba abierto, mostrarlo desplegado
+                        if (matchesDetail || manualOpenState[index]) {
+                            detailsRow.style.display = "table-row";
+                            if (btn) btn.textContent = "Ocultar";
+                        } else {
+                            detailsRow.style.display = "none";
+                            if (btn) btn.textContent = "Ver";
+                        }
+                    }
+                } else {
+                    tr.style.display = "none";
+                    if (detailsRow) {
+                        detailsRow.style.display = "none";
+                    }
+                }
+            });
+        }
+
+        loadData();
+    </script>
+</body>
+</html>

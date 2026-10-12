@@ -1,0 +1,24 @@
+# Entornos virtuales de Python
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+
+# Dependencias y sesiones de Node.js / WhatsApp Web
+node_modules/
+.wwebjs_auth/
+.wwebjs_cache/
+package-lock.json
+
+# Archivos de configuración sensibles
+.env
+
+# Carpetas temporales de boletas subidas
+boletas/
+boletas/procesadas/
+
+# Archivos del sistema y logs
+*.log
+.DS_Store
+Thumbs.db

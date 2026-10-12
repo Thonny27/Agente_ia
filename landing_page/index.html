@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BentoBox | Fusión Nikkei Auténtica</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #D32F2F; /* Crimson Red */
+            --primary-glow: rgba(211, 47, 47, 0.6);
+            --gold: #D4AF37;
+            --dark: #0A0A0A;
+            --dark-panel: #1A1A1A;
+            --text-light: #F5F5F5;
+            --text-muted: #AAAAAA;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Hero Background with Parallax effect */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 10vh;
+            background: linear-gradient(180deg, rgba(10,10,10,0.6) 0%, rgba(10,10,10,1) 100%), 
+                        url('https://images.unsplash.com/photo-1579871494447-9811cf80d66c?q=80&w=2000&auto=format&fit=crop') no-repeat center center/cover;
+            background-attachment: fixed;
+        }
+
+        /* Header Logo */
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 20px rgba(0,0,0,0.8);
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        .tagline {
+            font-weight: 300;
+            font-size: 1.2rem;
+            color: var(--gold);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+        }
+
+        /* Promotion Banner */
+        .promo-banner {
+            background: linear-gradient(135deg, var(--primary), #9A0000);
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            box-shadow: 0 0 30px var(--primary-glow);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: float 4s ease-in-out infinite;
+            margin-bottom: 60px;
+            text-align: center;
+            max-width: 90%;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Glassmorphism Form Container */
+        .glass-container {
+            background: rgba(26, 26, 26, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+            margin-bottom: 50px;
+            z-index: 10;
+        }
+
+        .glass-container h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            text-align: center;
+            color: var(--gold);
+        }
+
+        .glass-container p.subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-light);
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="tel"],
+        .form-group input[type="date"] {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(211, 47, 47, 0.3);
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        /* Custom File Upload */
+        .file-upload-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .file-upload-input {
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .file-upload-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+            background: rgba(211, 47, 47, 0.05);
+            border: 2px dashed rgba(211, 47, 47, 0.5);
+            border-radius: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .file-upload-wrapper:hover .file-upload-label {
+            background: rgba(211, 47, 47, 0.1);
+            border-color: var(--primary);
+        }
+
+        .upload-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        #file-name-display {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        /* Survey Section Styles */
+        .survey-container {
+            margin-top: 25px;
+            margin-bottom: 25px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            border-radius: 16px;
+            padding: 22px 18px;
+        }
+
+        .survey-title-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 12px;
+        }
+
+        .survey-title {
+            color: var(--gold);
+            font-size: 1.05rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .survey-overall-badge {
+            font-size: 0.78rem;
+            padding: 4px 10px;
+            background: rgba(76, 175, 80, 0.15);
+            border: 1px solid #4CAF50;
+            color: #81C784;
+            border-radius: 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .survey-q-item {
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.07);
+        }
+
+        .survey-q-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .survey-q-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 0.86rem;
+            color: #e0e0e0;
+            margin-bottom: 10px;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .survey-q-num {
+            background: rgba(212, 175, 55, 0.2);
+            color: var(--gold);
+            font-size: 0.72rem;
+            font-weight: 700;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .rating-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .rate-btn {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 8px 3px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .rate-btn .emoji {
+            font-size: 1.25rem;
+            transition: transform 0.2s;
+        }
+
+        .rate-btn .rate-text {
+            font-size: 0.62rem;
+            color: #888;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .rate-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .rate-btn:hover .emoji {
+            transform: scale(1.18);
+        }
+
+        .rate-btn.selected {
+            background: rgba(212, 175, 55, 0.18);
+            border-color: var(--gold);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.35);
+        }
+
+        .rate-btn.selected .rate-text {
+            color: var(--gold);
+        }
+
+        .rate-btn.selected .emoji {
+            transform: scale(1.15);
+        }
+
+        .q-feedback-text {
+            font-size: 0.75rem;
+            color: var(--gold);
+            margin-top: 6px;
+            text-align: right;
+            font-weight: 500;
+        }
+
+        /* Submit Button */
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(211, 47, 47, 0.6);
+            background: #E53935;
+        }
+
+        .btn-submit:active {
+            transform: translateY(1px);
+        }
+
+        /* Success Screen */
+        .success-screen {
+            display: none;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-20px);}
+            60% {transform: translateY(-10px);}
+        }
+
+    </style>
+</head>
+<body>
+
+    <main class="hero">
+        <h1 class="logo">Bento<span>Box</span></h1>
+        <div class="tagline">Fusión Nikkei • Chaufa • Makis</div>
+        
+        <div class="promo-banner">
+            🎁 Sube tu boleta de hoy y gana un MAKI ACEVICHADO en tu Cumpleaños 🎁
+        </div>
+
+        <div class="glass-container">
+            <div id="form-container">
+                <h2>Activa tu Regalo</h2>
+                <p class="subtitle">Únete al club exclusivo de BentoBox. Ingresa tus datos para registrar tu visita.</p>
+                
+                <form id="promoForm">
+                    <div class="form-group">
+                        <label>Nombres</label>
+                        <input type="text" name="nombres" required placeholder="Ej. Anthony">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Apellidos</label>
+                        <input type="text" name="apellidos" required placeholder="Ej. Alarcón">
+                    </div>
+
+                    <div class="form-group">
+                        <label>DNI / CE</label>
+                        <input type="text" name="dni" required placeholder="Ej. 12345678">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Celular / WhatsApp</label>
+                        <input type="tel" name="telefono" required placeholder="+51 999 999 999">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Correo Electrónico</label>
+                        <input type="email" name="correo" required placeholder="tu@email.com" style="width: 100%; padding: 14px 16px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; color: white; font-family: 'Outfit', sans-serif; font-size: 1rem; transition: all 0.3s ease; outline: none;">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Fecha de Nacimiento (Opcional)</label>
+                        <input type="date" name="cumpleanos">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Scan de Boleta</label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" name="boleta" id="boleta" class="file-upload-input" accept="image/*" required>
+                            <div class="file-upload-label">
+                                <span class="upload-icon">📸</span>
+                                <span>Toca para tomar foto o elegir archivo</span>
+                                <span id="file-name-display"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Encuesta de Satisfacción sobre el Servicio -->
+                    <div class="survey-container">
+                        <div class="survey-title-box">
+                            <div class="survey-title">
+                                <span>⭐</span> Encuesta de Servicio
+                            </div>
+                            <div class="survey-overall-badge" id="overall-badge">
+                                Estado: 🤩 Excelente (100%)
+                            </div>
+                        </div>
+                        <p style="font-size: 0.8rem; color: #aaa; margin-bottom: 14px;">
+                            Por favor califica tu experiencia de compra en estas 5 preguntas rápidas:
+                        </p>
+
+                        <!-- Inputs Ocultos para envío -->
+                        <input type="hidden" name="encuesta_q1" id="input_q1" value="5">
+                        <input type="hidden" name="encuesta_q2" id="input_q2" value="5">
+                        <input type="hidden" name="encuesta_q3" id="input_q3" value="5">
+                        <input type="hidden" name="encuesta_q4" id="input_q4" value="5">
+                        <input type="hidden" name="encuesta_q5" id="input_q5" value="5">
+                        <input type="hidden" name="estado_satisfaccion" id="input_estado" value="Excelente">
+
+                        <!-- Pregunta 1 -->
+                        <div class="survey-q-item">
+                            <div class="survey-q-label">
+                                <span class="survey-q-num">1</span>
+                                <span>¿Cómo calificas el tiempo de espera y entrega de tu pedido?</span>
+                            </div>
+                            <div class="rating-bar" data-q="1">
+                                <button type="button" class="rate-btn" onclick="selectRate(1, 1)"><span class="emoji">😡</span><span class="rate-text">Malo</span></button>
+                                <button type="button" class="rate-btn" onclick="selectRate(1, 2)"><span class="emoji">🙁</span><span class="rate-text">Regular</span></button>
+                                <button type="button" class="rate-btn" onclick="selectRate(1, 3)"><span class="emoji">😐</span><span class="rate-text">Aceptable</span></button>
+                                <button type="button" class="rate-btn" onclick="selectRate(1, 4)"><span class="emoji">😊</span><span class="rate-text">Bueno</span></button>
+                                <button type="button" class="rate-btn selected" onclick="selectRate(1, 5)"><span class="emoji">🤩</span><span class="rate-text">Excelente</span></button>
+                            </div>
+                            <div class="q-feedback-text" id="feedback-1">🤩 Excelente (5/5)</div>
+                        </div>
+
+                        <!-- Pregunta 2 -->
+                        <div class="survey-q-item">
+                            <div class="survey-q-label">
+                                <span class="survey-q-num">2</span>
+                                <span>¿Qué tan satisfecho estás con el sabor y presentación de los platillos?</span>
+                            </div>
+                            <div class="rating-bar" data-q="2">
+                                <button type="button" class="rate-btn" onclick="selectRate(2, 1)"><span class="emoji">😡</span><span class="rate-text">Malo</span></button>
+                                <button type="button" class="rate-btn" onclick="selectRate(2, 2)"><span class="emoji">🙁</span><span class="rate-text">Regular</span></button>
+                                <button type="button" class="rate-btn" onclick="selectRate(2, 3)"><span class="emoji">😐</span><span class="rate-text">Aceptable</span></button>
+                                <button type="button" class="rate-btn" onclick="selectRate(2, 4)"><span class="emoji">😊</span><span class="rate-text">Bueno</span></button>
+                                <button type="button" class="rate-btn selected" onclick="selectRate(2, 5)"><span class="emoji">🤩</span><span class="rate-text">Excelente</span></button>
+                            </div>
+                            <div class="q-feedback-text" id="feedback-2">🤩 Excelente (5/5)</div>
+                        </div>
+
+                        <!-- Pregunta 3 -->
+                        <div class="survey-q-item">
+                            <div class="survey-q-label">
+                                <span class="survey-q-num">3</span>
+                                <span>¿Cómo calificarías la amabilidad y atención del personal?</span>
+                            </div>
+                            <div class="rating-bar" data-q="3">
+                                <button type="button" class="rate-btn" onclick="selectRate(3, 1)"><span class="emoji">😡</span><span class="rate-text">Malo</span></button>
+                                <button type="button" class="rate-btn" onclick="selectRate(3, 2)"><span class="emoji">🙁</span><span class="rate-text">Regular</span></button>
+                                <button type="button" class="rate-btn" onclick="selectRate(3, 3)"><span class="emoji">😐</span><span class="rate-text">Aceptable</span></button>
+                                <button type="button" class="rate-btn" onclick="selectRate(3, 4)"><span class="emoji">😊</span><span class="rate-text">Bueno</span></button>
+                                <button type="button" class="rate-btn selected" onclick="selectRate(3, 5)"><span class="emoji">🤩</span><span class="rate-text">Excelente</span></button>
+                            </div>
+                            <div class="q-feedback-text" id="feedback-3">🤩 Excelente (5/5)</div>
+                        </div>
+
+                        <!-- Pregunta 4 -->
+                        <div class="survey-q-item">
+                            <div class="survey-q-label">
+                                <span class="survey-q-num">4</span>
+                                <span>¿Consideras adecuados y atractivos nuestros precios y promociones?</span>
+                            </div>
+                            <div class="rating-bar" data-q="4">
+                                <button type="button" class="rate-btn" onclick="selectRate(4, 1)"><span class="emoji">😡</span><span class="rate-text">Malo</span></button>
+                                <button type="button" class="rate-btn" onclick="selectRate(4, 2)"><span class="emoji">🙁</span><span class="rate-text">Regular</span></button>
+                                <button type="button" class="rate-btn" onclick="selectRate(4, 3)"><span class="emoji">😐</span><span class="rate-text">Aceptable</span></button>
+                                <button type="button" class="rate-btn" onclick="selectRate(4, 4)"><span class="emoji">😊</span><span class="rate-text">Bueno</span></button>
+                                <button type="button" class="rate-btn selected" onclick="selectRate(4, 5)"><span class="emoji">🤩</span><span class="rate-text">Excelente</span></button>
+                            </div>
+                            <div class="q-feedback-text" id="feedback-4">🤩 Excelente (5/5)</div>
+                        </div>
+
+                        <!-- Pregunta 5 -->
+                        <div class="survey-q-item">
+                            <div class="survey-q-label">
+                                <span class="survey-q-num">5</span>
+                                <span>¿Qué tan probable es que recomiendes BentoBox a amigos o familiares?</span>
+                            </div>
+                            <div class="rating-bar" data-q="5">
+                                <button type="button" class="rate-btn" onclick="selectRate(5, 1)"><span class="emoji">😡</span><span class="rate-text">Malo</span></button>
+                                <button type="button" class="rate-btn" onclick="selectRate(5, 2)"><span class="emoji">🙁</span><span class="rate-text">Regular</span></button>
+                                <button type="button" class="rate-btn" onclick="selectRate(5, 3)"><span class="emoji">😐</span><span class="rate-text">Aceptable</span></button>
+                                <button type="button" class="rate-btn" onclick="selectRate(5, 4)"><span class="emoji">😊</span><span class="rate-text">Bueno</span></button>
+                                <button type="button" class="rate-btn selected" onclick="selectRate(5, 5)"><span class="emoji">🤩</span><span class="rate-text">Excelente</span></button>
+                            </div>
+                            <div class="q-feedback-text" id="feedback-5">🤩 Excelente (5/5)</div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-submit" id="btnSubmit">ENVIAR BOLETA Y ACTIVAR</button>
+                </form>
+            </div>
+
+            <div class="success-screen" id="success-screen">
+                <div class="success-icon">🍣</div>
+                <h2>¡Arigato Gozaimasu!</h2>
+                <p class="subtitle">Hemos recibido tu boleta. Nuestra IA la está procesando.</p>
+                <p style="color: #4CAF50; font-weight: bold; margin-top: 15px;">
+                    ¡Quedas registrado! Nos pondremos en contacto contigo por WhatsApp en tu cumpleaños.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Encuesta de Satisfacción interactiva
+        const ratingLabels = {
+            1: { text: "😡 Muy Malo (1/5)", state: "Muy Malo" },
+            2: { text: "🙁 Regular (2/5)", state: "Regular" },
+            3: { text: "😐 Aceptable (3/5)", state: "Aceptable" },
+            4: { text: "😊 Bueno (4/5)", state: "Bueno" },
+            5: { text: "🤩 Excelente (5/5)", state: "Excelente" }
+        };
+
+        const currentRatings = { 1: 5, 2: 5, 3: 5, 4: 5, 5: 5 };
+
+        function selectRate(qNum, value) {
+            currentRatings[qNum] = value;
+            document.getElementById(`input_q${qNum}`).value = value;
+            
+            // Actualizar estilo visual de los botones de esa pregunta
+            const bar = document.querySelector(`.rating-bar[data-q="${qNum}"]`);
+            if (bar) {
+                const buttons = bar.querySelectorAll('.rate-btn');
+                buttons.forEach((btn, idx) => {
+                    if (idx + 1 === value) {
+                        btn.classList.add('selected');
+                    } else {
+                        btn.classList.remove('selected');
+                    }
+                });
+            }
+
+            // Actualizar texto descriptivo
+            const feedbackEl = document.getElementById(`feedback-${qNum}`);
+            if (feedbackEl) {
+                feedbackEl.textContent = ratingLabels[value].text;
+            }
+
+            // Actualizar estado general
+            updateOverallSatisfaction();
+        }
+
+        function updateOverallSatisfaction() {
+            const values = Object.values(currentRatings);
+            const sum = values.reduce((acc, curr) => acc + curr, 0);
+            const avg = sum / values.length;
+            const percentage = Math.round((avg / 5) * 100);
+
+            let stateName = "Excelente";
+            let emoji = "🤩";
+            let color = "#81C784";
+            let bg = "rgba(76, 175, 80, 0.15)";
+            let border = "#4CAF50";
+
+            if (avg < 2.5) {
+                stateName = "Insatisfecho";
+                emoji = "🙁";
+                color = "#FF5252";
+                bg = "rgba(255, 82, 82, 0.15)";
+                border = "#FF5252";
+            } else if (avg < 3.5) {
+                stateName = "Regular";
+                emoji = "😐";
+                color = "#FFD54F";
+                bg = "rgba(255, 213, 79, 0.15)";
+                border = "#FFD54F";
+            } else if (avg < 4.5) {
+                stateName = "Satisfecho";
+                emoji = "😊";
+                color = "#64B5F6";
+                bg = "rgba(100, 181, 246, 0.15)";
+                border = "#64B5F6";
+            }
+
+            const badge = document.getElementById('overall-badge');
+            if (badge) {
+                badge.innerHTML = `Estado: ${emoji} ${stateName} (${percentage}%)`;
+                badge.style.color = color;
+                badge.style.background = bg;
+                badge.style.borderColor = border;
+            }
+
+            const inputEstado = document.getElementById('input_estado');
+            if (inputEstado) {
+                inputEstado.value = `${stateName} (${percentage}%)`;
+            }
+        }
+
+        // File input visual feedback
+        const fileInput = document.getElementById('boleta');
+        const fileNameDisplay = document.getElementById('file-name-display');
+
+        fileInput.addEventListener('change', function(e) {
+            if (this.files && this.files.length > 0) {
+                fileNameDisplay.textContent = '✅ ' + this.files[0].name;
+                fileNameDisplay.style.color = '#4CAF50';
+            }
+        });
+
+        // Form submission logic
+        const form = document.getElementById('promoForm');
+        const btnSubmit = document.getElementById('btnSubmit');
+        const formContainer = document.getElementById('form-container');
+        const successScreen = document.getElementById('success-screen');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Loading state
+            const originalText = btnSubmit.innerHTML;
+            btnSubmit.innerHTML = 'PROCESANDO... ⏳';
+            btnSubmit.style.opacity = '0.7';
+            btnSubmit.disabled = true;
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch('/submit', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    formContainer.style.display = 'none';
+                    successScreen.style.display = 'block';
+                } else {
+                    alert('Hubo un problema: ' + result.error);
+                    btnSubmit.innerHTML = originalText;
+                    btnSubmit.style.opacity = '1';
+                    btnSubmit.disabled = false;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('No se pudo conectar con el servidor.');
+                btnSubmit.innerHTML = originalText;
+                btnSubmit.style.opacity = '1';
+                btnSubmit.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
